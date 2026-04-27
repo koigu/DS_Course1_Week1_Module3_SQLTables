@@ -6,7 +6,7 @@ import sqlite3
 import pandas as pd
 
 # Connect to the database
-conn = sqlite3.connect(r'D:\Datasciencefh16\assignment\DS_Course1_Week1_Module3_SQLTables\DS_Course1_Week1_Module3_SQLTables\data.sqlite')
+conn = sqlite3.connect('data.sqlite')
 
 pd.read_sql("SELECT * FROM sqlite_master", conn)
 
@@ -142,7 +142,7 @@ import sqlite3
 import pandas as pd
 
 # Connect to the database
-conn = sqlite3.connect(r'D:\Datasciencefh16\assignment\DS_Course1_Week1_Module3_SQLTables\data.sqlite')
+conn = sqlite3.connect('data.sqlite')
 
 pd.read_sql("""SELECT * FROM sqlite_master""", conn)
 
