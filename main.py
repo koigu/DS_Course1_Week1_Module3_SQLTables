@@ -8,7 +8,7 @@ import pandas as pd
 # Connect to the database
 conn = sqlite3.connect('data.sqlite')
 
-pd.read_sql("SELECT * FROM sqlite_master", conn)
+pd.read_sql("""SELECT * FROM sqlite_master""", conn)
 
 # Part 1: Join and Filter
  # CodeGrade step1
@@ -65,7 +65,7 @@ df_payment = pd.read_sql("""
 # CodeGrade step6
 # Replace None with your code
 df_credit = pd.read_sql("""
-    SELECT e.employeeNumber, e.firstName, e.lastName,
+    SELECT e.employeeNumber, 
            COUNT(c.customerNumber) AS num_customers
     FROM employees e
     JOIN customers c ON e.employeeNumber = c.salesRepEmployeeNumber
@@ -125,6 +125,8 @@ df_under_20 = pd.read_sql("""
         GROUP BY od2.productCode
         HAVING COUNT(DISTINCT o2.customerNumber) < 20
     )
+    ORDER BY e.firstName
+    LIMIT 1
 """, conn)
 
 # Run this cell without changes
@@ -218,7 +220,7 @@ df_product_sold = pd.read_sql("""
            SUM(od.quantityOrdered) AS totalunits
     FROM products p
     JOIN orderdetails od ON p.productCode = od.productCode
-    GROUP BY p.productCode
+    GROUP BY p.productCode, p.productName
     ORDER BY totalunits DESC
 """, conn)
 
@@ -230,7 +232,7 @@ df_total_customers = pd.read_sql("""
     FROM products p
     JOIN orderdetails od ON p.productCode = od.productCode
     JOIN orders o ON od.orderNumber = o.orderNumber
-    GROUP BY p.productCode
+    GROUP BY p.productCode, p.productName
     ORDER BY numpurchasers DESC
 """, conn)
 
@@ -241,19 +243,17 @@ df_customers = pd.read_sql("""
     FROM offices o
     JOIN employees e ON o.officeCode = e.officeCode
     JOIN customers c ON e.employeeNumber = c.salesRepEmployeeNumber
-    GROUP BY o.officeCode
+    GROUP BY o.officeCode, o.city
 """, conn)
 
 # CodeGrade step10
 # Replace None with your code
 df_under_20 = pd.read_sql("""
-    SELECT DISTINCT e.employeeNumber, e.firstName, e.lastName,
-                    o.city, o.officeCode
+    SELECT e.firstName
     FROM employees e
     JOIN customers c ON e.employeeNumber = c.salesRepEmployeeNumber
     JOIN orders ord ON c.customerNumber = ord.customerNumber
     JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-    JOIN offices o ON e.officeCode = o.officeCode
     WHERE od.productCode IN (
         SELECT od2.productCode
         FROM orderdetails od2
@@ -261,6 +261,8 @@ df_under_20 = pd.read_sql("""
         GROUP BY od2.productCode
         HAVING COUNT(DISTINCT o2.customerNumber) < 20
     )
+    ORDER BY e.firstName
+    LIMIT 1
 """, conn)
 
 # Run this cell without changes
